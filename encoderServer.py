@@ -19,10 +19,7 @@ def root():
 
 @app.post("/predict")
 def predict(data: InputData):
-    # scores = cross_encoder.predict(data.sentences).tolist()
-    print(f'Input data: {data.sentences}')
-    corpus_embeddings = bi_encoder.encode((data.sentences), convert_to_tensor=True, show_progress_bar=True)
-    print(f'Output: {corpus_embeddings}')
-    return {"corpus_embeddings": corpus_embeddings}
+    corpus_embeddings = bi_encoder.encode(data.sentences, convert_to_tensor=True, show_progress_bar=True).tolist()
+    return {"corpus_embeddings" : corpus_embeddings}
 
 # Run using: uvicorn filename:app --host 0.0.0.0 --port 8000

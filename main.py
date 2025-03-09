@@ -60,6 +60,7 @@ if not embedding_cache_path.exists():
     corpus_sentences = ...
     print("Encoding the corpus. This might take a while")
     corpus_embeddings = bi_encoder.encode(passages, convert_to_tensor=True, show_progress_bar=True)
+    print({f'Corpus embeddings: {corpus_embeddings}'})
 
     print("Storing file on disc")
     with open(embedding_cache_path, "wb") as fOut:

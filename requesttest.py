@@ -40,7 +40,44 @@ for doc in docs:
     # print(doc.metadata['Problem Summary'], doc.metadata['Problem Description'], doc.metadata['Notes & Resolution'])
     passages.append(str([doc.metadata['Problem Summary'], doc.metadata['Problem Description'], doc.metadata['Notes & Resolution']]))
 
-data = {"sentences" : passages}
-response = requests.post("http://127.0.0.1:8000/predict", json=data)
 
-print(response.json())
+root = Path().resolve()
+embedding_cache_path = root / 'embeddings' / 'doc_embedding.pickle'
+
+if not embedding_cache_path.exists():
+    corpus_sentences = ...
+    print("Encoding the corpus. This might take a while")
+
+    data = {"sentences" : passages}
+    corpus_embeddings = requests.post("http://127.0.0.1:8000/predict", json=data)
+
+    # print(corpus_embeddings.json()['detail'])
+    print(corpus_embeddings.json())
+
+    # print("Storing file on disc")
+    # print({'sentences': corpus_sentences, 'embeddings': corpus_embeddings})
+    # with open(embedding_cache_path, "wb") as fOut:
+    #     pickle.dump({'sentences': corpus_sentences, 'embeddings': corpus_embeddings}, fOut)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# data = {"sentences" : passages}
+# response = requests.post("http://127.0.0.1:8000/predict", json=data)
+
+
+
+
+# print(response.json())
