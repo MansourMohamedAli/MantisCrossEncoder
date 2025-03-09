@@ -3,3 +3,4 @@ llm_config/config.json
 embeddings/
 references/
 .vscode/
+__pycache__/
