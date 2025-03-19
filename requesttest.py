@@ -1,6 +1,4 @@
 from langchain_community.document_loaders.csv_loader import CSVLoader
-import sys
-import csv
 import pickle
 from pathlib import Path
 import requests
@@ -51,27 +49,19 @@ def generate_embeddings(passages, embedding_name: str):
     return corpus_embeddings
 
 # generate a response combining the prompt and data we retrieved in step 2
-query = "I inserted a malfunction and the overcurrent trip did not occur when it was supposed to?"
+query = "Who is dofarrell?"
 passages = generate_passages(data_path="data/mantis.csv")
 embeddings = generate_embeddings(passages, embedding_name='doc_embedding.pickle')
 
-llm_payload = {"query" : query, "passages" : passages, "embeddings" : embeddings }
-
-# data = search(query, embeddings, passages)
+llm_payload = {"query" : query, "embeddings" : embeddings, "passages" : passages }
 
 rerank_results_json = requests.post("http://127.0.0.1:8000/invoke_llm", json=llm_payload)
 rerank_results = rerank_results_json.json()["rerank_results"]
-print(rerank_results)
 
+client = ollama.Client(host='http://localhost:11434')
 
-
-
-# client = ollama.Client(host='http://localhost:11434')
-
-
-
-# model = "llama3.2:latest"
-# print(f"\n------------------------ Start {model} Response ------------------------ \n")
-# output = client.chat(model=model, messages=[{'role': 'user', 'content': f"Using this data: {data}. Respond to this prompt: {query}"}])
-# print(output.message.content)
-# print(f"\n------------------------- End {model} Response ------------------------- \n")
+model = "llama3.2:latest"
+print(f"\n------------------------ Start {model} Response ------------------------ \n")
+output = client.chat(model=model, messages=[{'role': 'user', 'content': f"Using this data: {rerank_results}. Respond to this prompt: {query}"}])
+print(output.message.content)
+print(f"\n------------------------- End {model} Response ------------------------- \n")

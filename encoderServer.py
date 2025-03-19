@@ -29,10 +29,11 @@ def biencoder(data: InputData):
 
 @app.post("/invoke_llm")
 def invoke_llm(input: Search):
+    print(input.query)
     question_embedding = bi_encoder.encode(input.query, convert_to_tensor=True)
     question_embedding = question_embedding.cuda()
 
-    hits = util.semantic_search(question_embedding, input.embeddings, top_k=5)
+    hits = util.semantic_search(question_embedding, torch.Tensor(input.embeddings), top_k=5)
     hits = hits[0]  # Get the hits for the first query
 
     ##### Re-Ranking #####
@@ -59,7 +60,6 @@ def invoke_llm(input: Search):
     for hit in hits[0:5]:
         print("\t{:.3f}\t{}".format(hit['cross-score'], input.passages[hit['corpus_id']].replace("\n", " ")))
         result.append(input.passages[hit['corpus_id']].replace("\n", " "))
-    return({"rerank_results" : result})
+    return {"rerank_results" : result}
 
-
-# Run using: uvicorn filename:app --host 0.0.0.0 --port 8000
+# Run using: uvicorn encoderServer:app --port 8000
